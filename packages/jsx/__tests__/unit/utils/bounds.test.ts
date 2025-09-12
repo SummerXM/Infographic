@@ -1,6 +1,10 @@
-import { describe, it, expect } from 'vitest';
-import { getElementBounds, getElementsBounds, getCombinedBounds } from '../../../src/utils/bounds';
-import type { JSXElement, JSXNode, Bounds } from '../../../src/types';
+import { describe, expect, it } from 'vitest';
+import type { Bounds, JSXElement } from '../../../src/types';
+import {
+  getCombinedBounds,
+  getElementBounds,
+  getElementsBounds,
+} from '../../../src/utils/bounds';
 
 describe('bounds utils', () => {
   describe('getCombinedBounds', () => {
@@ -10,8 +14,18 @@ describe('bounds utils', () => {
     });
 
     it('should return zero bounds for null/undefined input', () => {
-      expect(getCombinedBounds(null)).toEqual({ x: 0, y: 0, width: 0, height: 0 });
-      expect(getCombinedBounds(undefined)).toEqual({ x: 0, y: 0, width: 0, height: 0 });
+      expect(getCombinedBounds(null)).toEqual({
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+      });
+      expect(getCombinedBounds(undefined)).toEqual({
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+      });
     });
 
     it('should calculate combined bounds for single bound', () => {
@@ -70,14 +84,34 @@ describe('bounds utils', () => {
   describe('getElementBounds', () => {
     it('should return zero bounds for falsy values', () => {
       expect(getElementBounds()).toEqual({ x: 0, y: 0, width: 0, height: 0 });
-      expect(getElementBounds(null)).toEqual({ x: 0, y: 0, width: 0, height: 0 });
-      expect(getElementBounds(undefined)).toEqual({ x: 0, y: 0, width: 0, height: 0 });
+      expect(getElementBounds(null)).toEqual({
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+      });
+      expect(getElementBounds(undefined)).toEqual({
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+      });
     });
 
     it('should return zero bounds for primitive values', () => {
-      expect(getElementBounds('text')).toEqual({ x: 0, y: 0, width: 0, height: 0 });
+      expect(getElementBounds('text')).toEqual({
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+      });
       expect(getElementBounds(42)).toEqual({ x: 0, y: 0, width: 0, height: 0 });
-      expect(getElementBounds(true)).toEqual({ x: 0, y: 0, width: 0, height: 0 });
+      expect(getElementBounds(true)).toEqual({
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+      });
     });
 
     it('should handle arrays by delegating to getElementsBounds', () => {
@@ -273,8 +307,18 @@ describe('bounds utils', () => {
     });
 
     it('should return zero bounds for null/undefined input', () => {
-      expect(getElementsBounds(null as any)).toEqual({ x: 0, y: 0, width: 0, height: 0 });
-      expect(getElementsBounds(undefined as any)).toEqual({ x: 0, y: 0, width: 0, height: 0 });
+      expect(getElementsBounds(null as any)).toEqual({
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+      });
+      expect(getElementsBounds(undefined as any)).toEqual({
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+      });
     });
 
     it('should calculate bounding box for single element', () => {

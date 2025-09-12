@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { isJSXElement } from '../../../src/utils/is-jsx-element';
+import { describe, expect, it } from 'vitest';
 import type { JSXElement } from '../../../src/types';
+import { isJSXElement } from '../../../src/utils/is-jsx-element';
 
 describe('is-jsx-element utils', () => {
   describe('isJSXElement', () => {
@@ -61,27 +61,27 @@ describe('is-jsx-element utils', () => {
     });
 
     it('should return false for objects without type property', () => {
-      expect(isJSXElement({})).toBe(false);
-      expect(isJSXElement({ props: {} })).toBe(false);
-      expect(isJSXElement({ children: [] })).toBe(false);
+      expect(isJSXElement({} as any)).toBe(false);
+      expect(isJSXElement({ props: {} } as any)).toBe(false);
+      expect(isJSXElement({ children: [] } as any)).toBe(false);
     });
 
     it('should return true for objects with type property even if missing props', () => {
       const element = { type: 'div' };
-      expect(isJSXElement(element)).toBe(true);
+      expect(isJSXElement(element as any)).toBe(true);
     });
 
     it('should return false for functions', () => {
       const fn = () => {};
-      expect(isJSXElement(fn)).toBe(false);
+      expect(isJSXElement(fn as any)).toBe(false);
     });
 
     it('should return false for dates', () => {
-      expect(isJSXElement(new Date())).toBe(false);
+      expect(isJSXElement(new Date() as any)).toBe(false);
     });
 
     it('should return false for regular expressions', () => {
-      expect(isJSXElement(/test/)).toBe(false);
+      expect(isJSXElement(/test/ as any)).toBe(false);
     });
 
     it('should handle JSXElement with symbol type', () => {
@@ -99,12 +99,12 @@ describe('is-jsx-element utils', () => {
           level2: {
             type: 'div',
             props: {},
-          }
-        }
+          },
+        },
       };
-      expect(isJSXElement(nestedObject)).toBe(false);
-      expect(isJSXElement(nestedObject.level1)).toBe(false);
-      expect(isJSXElement(nestedObject.level1.level2)).toBe(true);
+      expect(isJSXElement(nestedObject as any)).toBe(false);
+      expect(isJSXElement(nestedObject.level1 as any)).toBe(false);
+      expect(isJSXElement(nestedObject.level1.level2 as any)).toBe(true);
     });
   });
 });

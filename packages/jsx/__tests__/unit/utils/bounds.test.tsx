@@ -106,14 +106,7 @@ describe('bounds utils', () => {
       it('should prioritize internal dimensions over external dimensions', () => {
         const CustomRect = () => <Rect x={0} y={0} width={50} height={30} />;
 
-        const element = (
-          <CustomRect
-            x={20}
-            y={40}
-            width={200}
-            height={100}
-          />
-        );
+        const element = <CustomRect x={20} y={40} width={200} height={100} />;
 
         const bounds = getElementBounds(element);
         expect(bounds).toEqual({
@@ -315,7 +308,6 @@ describe('bounds utils', () => {
             {null}
             {undefined}
             <Ellipse x={30} y={25} width={15} height={10} />
-            {false && <Text>Hidden</Text>}
           </Group>
         );
 
@@ -474,7 +466,7 @@ describe('bounds utils', () => {
           ];
 
           let currX = 0;
-          const content = children.map((child, index) => {
+          const content = children.map((child) => {
             const bounds = getElementBounds(child);
             const x = currX + bounds.x;
             currX += bounds.width + gap;
@@ -570,7 +562,6 @@ describe('bounds utils', () => {
         null,
         undefined,
         <Ellipse x={30} y={25} width={15} height={10} />,
-        false && <Text>Hidden</Text>,
       ];
 
       const bounds = getElementsBounds(elements);

@@ -1,5 +1,5 @@
 export interface JSXElement {
-  type: string | Symbol | Function;
+  type: string | symbol | ((props?: any) => JSXNode);
   props: Record<string, any>;
   key?: string | null;
 }

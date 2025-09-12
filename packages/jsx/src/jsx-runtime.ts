@@ -1,10 +1,10 @@
-import type { FragmentProps, JSXElement } from './types';
+import type { FragmentProps, JSXElement, JSXNode } from './types';
 
 export const Fragment = Symbol('Fragment');
 
 export function jsx(
-  type: string | Function | Symbol,
-  props: any = {},
+  type: string | symbol | ((props?: any) => JSXNode),
+  props: Record<string, any> = {},
 ): JSXElement {
   return { type, props };
 }

@@ -103,7 +103,10 @@ describe('jsx layout components', () => {
 <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 135 50">
   <g x="0" y="0" width="135" height="50">
     <rect width="30" height="40" fill="red" stroke-width="10" x="0" />
-    <text x="40" y="20" width="35" height="0" font-size="14">Hello</text>
+    <g x="40" y="20" width="35">
+      <rect x="40" y="20" width="35" fill="none" />
+      <text x="40" y="20" fill="black" font-size="14" text-anchor="start" dominant-baseline="hanging" data-text-alignment="LEFT TOP" data-width="35" data-height="0">Hello</text>
+    </g>
     <ellipse width="50" height="50" fill="blue" x="85" cx="110" cy="25" rx="25" ry="25" />
   </g>
 </svg>`,

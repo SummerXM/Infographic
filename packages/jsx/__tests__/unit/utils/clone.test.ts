@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { cloneElement } from '../../../src/utils/clone';
+import { describe, expect, it } from 'vitest';
 import type { JSXElement } from '../../../src/types';
+import { cloneElement } from '../../../src/utils/clone';
 
 describe('clone utils', () => {
   describe('cloneElement', () => {
@@ -77,17 +77,17 @@ describe('clone utils', () => {
         type: 'g',
         props: {
           transform: 'translate(10,20)',
+          children: [
+            {
+              type: 'rect',
+              props: { width: 50, height: 50 },
+            },
+            {
+              type: 'circle',
+              props: { r: 25 },
+            },
+          ],
         },
-        children: [
-          {
-            type: 'rect',
-            props: { width: 50, height: 50 },
-          },
-          {
-            type: 'circle',
-            props: { r: 25 },
-          },
-        ],
       };
 
       const cloned = cloneElement(element);
@@ -95,7 +95,7 @@ describe('clone utils', () => {
       expect(cloned).toEqual(element);
       expect(cloned).not.toBe(element);
       expect(cloned.props).not.toBe(element.props);
-      expect(cloned.children).toBe(element.children); // shallow clone, children reference is preserved
+      expect(cloned.props.children).toBe(element.props.children); // shallow clone, children reference is preserved
     });
 
     it('should handle element with empty props', () => {
@@ -155,16 +155,15 @@ describe('clone utils', () => {
     it('should preserve all additional properties', () => {
       const element: JSXElement = {
         type: 'rect',
-        props: { width: 100 },
+        props: { width: 100, children: [] },
         key: 'unique-key',
-        children: [],
       };
 
       const cloned = cloneElement(element);
 
       expect(cloned.key).toBe('unique-key');
-      expect(cloned.children).toEqual([]);
-      expect(cloned.children).toBe(element.children); // reference preserved for non-props
+      expect(cloned.props.children).toEqual([]);
+      expect(cloned.props.children).toBe(element.props.children); // reference preserved for non-props
     });
 
     it('should handle string type', () => {

@@ -1,16 +1,19 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "..",
-    "rootDir": ".",
+    "baseUrl": ".",
+    "rootDir": null,
     "noEmit": true,
     "composite": false,
+    "moduleResolution": "node",
     "paths": {
-      "@antv/infographic-jsx": ["./src"],
-      "@antv/infographic-jsx/*": ["./src/*"],
-      "@@/*": ["./__tests__/*"]
+      "@antv/infographic-jsx": ["../src/index"],
+      "@antv/infographic-jsx/*": ["../src/*"],
+      "@/*": ["../src/*"],
+      "@@/*": ["./*"]
     }
   },
-  "include": ["./unit/**/*"],
+  "include": ["./**/*", "../src/global.d.ts"],
+  "exclude": ["node_modules"],
   "references": [{ "path": ".." }]
 }

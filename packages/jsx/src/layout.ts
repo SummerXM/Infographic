@@ -7,7 +7,7 @@ import type {
 } from './types';
 import { createDefaultContext, getRenderableChildrenOf } from './utils';
 
-type LayoutComponent = JSXElement & { type: Symbol };
+type LayoutComponent = JSXElement & { type: symbol };
 
 type LayoutFunction<T = {}> = (
   children: JSXElement[],
@@ -15,7 +15,7 @@ type LayoutFunction<T = {}> = (
   context: RenderContext,
 ) => JSXElement;
 
-const LAYOUT_FN_MAP = new Map<Symbol, LayoutFunction<any>>();
+const LAYOUT_FN_MAP = new Map<symbol, LayoutFunction<any>>();
 
 export function createLayout<T = {}>(fn: LayoutFunction<T>): ComponentType<T> {
   const type = Symbol('layout');
