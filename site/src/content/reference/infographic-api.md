@@ -9,31 +9,34 @@ AntV Infographic 的 API 由 `Infographic` 类统一对外暴露，用户可以�
 要创建信息图实例，首先需要导入 `Infographic` 类，然后通过 `new` 关键字进行实例化，其构造函数签名为：
 
 ```ts
-constructor (options: InfographicOptions): Infographic;
+constructor (options: string | Partial<InfographicOptions>): Infographic;
 ```
 
-其中，`options` 即我们所指的[信息图语法](/learn/infographic-syntax)用于配置信息图的相关选项，具体配置项请参考[配置项](/reference/infographic-options)。
+其中，`options` 可以是两种形式：
+
+- **信息图语法字符串**：参见[信息图语法](/learn/infographic-syntax)，适合让 AI 或流式输出直接驱动渲染。
+- **（部分）`InfographicOptions` 对象**：按照[配置项](/reference/infographic-options)构造的 JSON。
 
 ## 实例方法 {#instance-methods}
 
 ### getOptions {#getoptions}
 
-获取实例当前持有的配置信息，便于调试或二次加工。
+获取实例当前持有的配置信息，便于调试或二次加工。对于信息图语法，会返回解析后的配置对象。
 
 **类型签名：**
 
 ```typescript
-getOptions(): InfographicOptions
+getOptions(): Partial<InfographicOptions>
 ```
 
 ### render {#render}
 
-根据配置信息渲染信息图。
+根据配置信息或语法字符串渲染信息图。
 
 **类型签名：**
 
 ```typescript
-render(): void
+render(options?: string | Partial<InfographicOptions>): void
 ```
 
 **示例：**
@@ -45,17 +48,46 @@ const infographic = new Infographic({
   // 信息图配置
 });
 
-infographic.render();
+const syntax = `
+infographic <template-name>
+data
+  title 标题
+  items
+    - label 标签1
+    - label 标签2
+`;
+
+// 直接渲染信息图语法
+infographic.render(syntax);
 ```
 
-### compose {#compose}
+### update {#update}
 
-创建未渲染的信息图模板，以供后续渲染使用。
+在现有配置的基础上进行增量更新。`update()` 会将传入的语法或配置与当前实例中的 `options` 进行合并，适用于只修改部分字段的场景。
 
 **类型签名：**
 
 ```typescript
-compose(): SVGSVGElement
+update(options: string | Partial<InfographicOptions>): void
+```
+
+**示例：**
+
+```typescript
+// 更新主题，同时保留之前的配置
+infographic.update({
+  theme: 'dark',
+});
+```
+
+### compose {#compose}
+
+创建未渲染的信息图模板，以供后续渲染使用。通常不需要手动调用；`render()` 会自动执行这一步。但如果你打算自己接管渲染流程，可以显式传入 `ParsedInfographicOptions`（可由语法字符串解析后再通过 `parseOptions` 获取）。
+
+**类型签名：**
+
+```typescript
+compose(parsedOptions: ParsedInfographicOptions): SVGSVGElement
 ```
 
 ### getTypes {#gettypes}
@@ -99,6 +131,8 @@ off(event: string, listener: (...args: any[]) => void): void
 
 内置事件包括：
 
+- `warning`：解析语法字符串时出现的非致命警告，携带 `SyntaxError[]`。
+- `error`：解析或渲染失败时触发，可能是 `SyntaxError[]` 或 `Error`。
 - `rendered`：完成渲染后触发，携带 `{node, options}`。
 - `destroyed`：调用 `destroy()` 后触发。
 

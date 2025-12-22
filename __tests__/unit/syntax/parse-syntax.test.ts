@@ -46,6 +46,21 @@ data
     ).toBe(true);
   });
 
+  it('allows custom properties on data items', () => {
+    const input = `
+data
+  items
+    - label A
+      time 1996
+`;
+    const result = parseSyntax(input);
+    expect(result.errors).toHaveLength(0);
+    expect(result.options.data?.items?.[0]).toMatchObject({
+      label: 'A',
+      time: 1996,
+    });
+  });
+
   it('uses infographic shorthand for template and merges blocks', () => {
     const input = `
 infographic sales-dashboard
@@ -128,6 +143,98 @@ data
         (error) => error.code === 'unknown_key' && error.path === 'foo',
       ),
     ).toBe(true);
+  });
+
+  it('parses palette name strings when a single inline value is provided', () => {
+    const input = `
+theme
+  palette antv
+`;
+    const result = parseSyntax(input);
+    expect(result.errors).toHaveLength(0);
+    expect(result.options.themeConfig?.palette).toBe('antv');
+  });
+
+  it('treats single inline hex colors as palette arrays', () => {
+    const input = `
+theme
+  palette #ff00aa
+`;
+    const result = parseSyntax(input);
+    expect(result.errors).toHaveLength(0);
+    expect(result.options.themeConfig?.palette).toEqual(['#ff00aa']);
+  });
+
+  it('treats single inline rgb colors as palette arrays', () => {
+    const input = `
+theme
+  palette rgba(255, 0, 0, 0.5)
+`;
+    const result = parseSyntax(input);
+    expect(result.errors).toHaveLength(0);
+    expect(result.options.themeConfig?.palette).toEqual([
+      'rgba(255, 0, 0, 0.5)',
+    ]);
+  });
+
+  it('treats yaml-style palette lists as arrays even with one item', () => {
+    const input = `
+theme
+  palette
+    - #abcdef
+`;
+    const result = parseSyntax(input);
+    expect(result.errors).toHaveLength(0);
+    expect(result.options.themeConfig?.palette).toEqual(['#abcdef']);
+  });
+
+  it('drops invalid theme color values and reports errors', () => {
+    const input = `
+theme
+  colorBg #1
+  colorPrimary #00ff99
+`;
+    const result = parseSyntax(input);
+    expect(result.options.themeConfig?.colorBg).toBeUndefined();
+    expect(result.options.themeConfig?.colorPrimary).toBe('#00ff99');
+    expect(
+      result.errors.some(
+        (error) =>
+          error.code === 'invalid_value' && error.path === 'theme.colorBg',
+      ),
+    ).toBe(true);
+  });
+
+  it('filters invalid palette entries but keeps valid ones', () => {
+    const input = `
+theme
+  palette #0ff #0f0 #1
+`;
+    const result = parseSyntax(input);
+    expect(result.options.themeConfig?.palette).toEqual(['#0ff', '#0f0']);
+    expect(
+      result.errors.some(
+        (error) =>
+          error.code === 'invalid_value' && error.path === 'theme.palette[2]',
+      ),
+    ).toBe(true);
+  });
+
+  it('parses theme base text colors', () => {
+    const input = `
+theme
+  base
+    text
+      fill #123456
+      stroke #1
+    shape
+      fill red
+`;
+    const result = parseSyntax(input);
+    expect(result.errors).toHaveLength(0);
+    expect(result.options.themeConfig?.base?.text?.fill).toBe('#123456');
+    expect(result.options.themeConfig?.base?.text?.stroke).toBeUndefined();
+    expect(result.options.themeConfig?.base?.shape?.fill).toBe('red');
   });
 
   it('parses template block shorthand and width string values', () => {
